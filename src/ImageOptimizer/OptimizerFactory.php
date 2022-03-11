@@ -262,8 +262,9 @@ class OptimizerFactory
         );
     }
 
-    private function wrap(CommandOptimizer|ChainOptimizer|SmartOptimizer $optimizer): ChangedOutputOptimizer|SuppressErrorOptimizer
-    {
+    private function wrap(
+        CommandOptimizer|ChainOptimizer|SmartOptimizer $optimizer
+    ): ChangedOutputOptimizer|SuppressErrorOptimizer {
         // $optimizer = $optimizer instanceof ChangedOutputOptimizer ?
         //     $optimizer :
         //     new ChangedOutputOptimizer(
@@ -281,8 +282,9 @@ class OptimizerFactory
             $optimizer;
     }
 
-    private function unwrap(ChangedOutputOptimizer|SuppressErrorOptimizer $optimizer): CommandOptimizer|ChainOptimizer|SmartOptimizer
-    {
+    private function unwrap(
+        ChangedOutputOptimizer|SuppressErrorOptimizer $optimizer
+    ): CommandOptimizer|ChainOptimizer|SmartOptimizer {
         return $optimizer->unwrap();
     }
 
