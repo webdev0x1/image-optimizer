@@ -9,7 +9,7 @@ jobs:
       matrix:
         php: [8.0, 8.1]
         composer_flags: ["", "--prefer-lowest"]
-    name: PHP-${{ matrix.php }}-composer${{ composer_flags }}
+    name: PHP-${{ matrix.php }}-composer${{ matrix.composer_flags }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -29,6 +29,6 @@ jobs:
           apt-get update && apt-get install -y jpegoptim pngquant gifsicle optipng libjpeg-progs
           npm install -g svgo@1.3.2
       - name: Install PHP dependencies
-        run: composer install ${{ composer_flags }} -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --dev
+        run: composer install ${{ matrix.composer_flags }} -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --dev
       - name: Run Tests
         run: composer test
