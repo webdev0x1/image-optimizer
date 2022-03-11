@@ -29,7 +29,8 @@ class CommandTest extends TestCase
     public function testCommandFailed()
     {
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessageMatches('/Command failed, return code: 2/');
+        // Command will return 1 on OSX, 2 on Ubuntu
+        $this->expectExceptionMessageMatches('/Command failed, return code: [12]/');
 
         $command = new Command('ls', ['/dir/does/not/exist']);
         $command->execute();
