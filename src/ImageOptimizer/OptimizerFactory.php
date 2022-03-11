@@ -49,7 +49,7 @@ class OptimizerFactory
             'jpegoptim_options' => ['--strip-all', '--all-progressive'],
             'jpegtran_options' => ['-optimize', '-progressive'],
             'advpng_options' => ['-z', '-4', '-q'],
-            'svgo_options' => ['--disable=cleanupIDs'],
+            'svgo_options' => ['--config=' . realpath(__DIR__ . '/../../config') . '/svgo.config.js'],
             'custom_optimizers' => [],
             'single_optimizer_timeout_in_seconds' => 60,
             'output_filepath_pattern' => '%basename%/%filename%%ext%'
@@ -129,7 +129,7 @@ class OptimizerFactory
                 'svgo',
                 $this->options['svgo_options'],
                 function ($filepath) {
-                    return ['--input' => $filepath, '--output' => $filepath];
+                    return ['--output' => $filepath];
                 }
             )
         );

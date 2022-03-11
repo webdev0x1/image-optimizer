@@ -27,7 +27,7 @@ jobs:
       - name: Install app dependencies
         run: |
           apt-get update && apt-get install -y jpegoptim pngquant gifsicle optipng libjpeg-progs
-          npm install -g svgo@1.3.2
+          npm install -g svgo@2.8.0
       - name: Install PHP dependencies
         run: composer install ${{ matrix.composer_flags }} --no-interaction
       - name: Run Tests
