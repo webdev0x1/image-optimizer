@@ -11,10 +11,18 @@ use Symfony\Component\Process\Process;
 
 final class Command
 {
-    public $cmd;
-    public $args;
-    public $timeout;
+    public string $cmd;
+    /**
+     * @var array <string>
+     */
+    public array $args;
+    public ?float $timeout;
 
+    /**
+     * @param string $bin
+     * @param array<string> $args
+     * @param float|null $timeout
+     */
     public function __construct(string $bin, array $args = [], ?float $timeout = null)
     {
         if (!function_exists('exec')) {
@@ -36,6 +44,10 @@ final class Command
         $this->timeout = $timeout;
     }
 
+    /**
+     * @param array<string> $customArgs
+     * @return void
+     */
     public function execute(array $customArgs = []): void
     {
         $process = new Process(array_merge([$this->cmd], $this->args, $customArgs));

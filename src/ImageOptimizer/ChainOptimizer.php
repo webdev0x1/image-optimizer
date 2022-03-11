@@ -10,12 +10,17 @@ use Psr\Log\LoggerInterface;
 class ChainOptimizer implements Optimizer
 {
     /**
-     * @var Optimizer[]
+     * @var array<CommandOptimizer>
      */
-    public $optimizers;
-    public $executeFirst;
-    public $logger;
+    public array $optimizers;
+    public bool $executeFirst;
+    public LoggerInterface $logger;
 
+    /**
+     * @param array<CommandOptimizer> $optimizers
+     * @param boolean $executeFirst
+     * @param LoggerInterface $logger
+     */
     public function __construct(array $optimizers, bool $executeFirst, LoggerInterface $logger)
     {
         $this->optimizers = $optimizers;

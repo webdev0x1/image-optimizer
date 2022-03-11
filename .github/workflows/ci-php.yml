@@ -8,7 +8,6 @@ jobs:
     strategy:
       matrix:
         php: ['8.0', '8.1']
-        composer_flags: ['']
     name: PHP-${{ matrix.php }}-composer${{ matrix.composer_flags }}
     steps:
       - name: Checkout code
@@ -22,13 +21,13 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
+          extensions: mbstring, gd, imagick
           coverage: none
       - name: Install app dependencies
         run: |
           sudo apt-get install -y jpegoptim pngquant gifsicle optipng libjpeg-progs
           npm install -g svgo@2.8.0
       - name: Install PHP dependencies
-        run: composer update ${{ matrix.composer_flags }} --no-interaction
+        run: composer update --no-interaction
       - name: Run Tests
         run: composer test

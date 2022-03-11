@@ -15,7 +15,7 @@ apt-get install -y libjpeg-progs libjpeg8-dbg libimage-exiftool-perl
 apt-get install -y imagemagick pngnq tar unzip libpng-dev git
 apt-get install -y optipng pngquant
 apt-get install -y npm nodejs
-npm install -g svgo@1.3.2
+npm install -g svgo@2.8.0
 
 cd /home/ubuntu
 

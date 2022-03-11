@@ -6,10 +6,10 @@ namespace ImageOptimizer;
 
 class ChangedOutputOptimizer implements WrapperOptimizer
 {
-    private $outputPattern;
-    private $optimizer;
+    private string $outputPattern;
+    private CommandOptimizer|ChainOptimizer|SmartOptimizer $optimizer;
 
-    public function __construct(string $outputPattern, Optimizer $optimizer)
+    public function __construct(string $outputPattern, CommandOptimizer|ChainOptimizer|SmartOptimizer $optimizer)
     {
         $this->outputPattern = $outputPattern;
         $this->optimizer = $optimizer;
@@ -46,7 +46,7 @@ class ChangedOutputOptimizer implements WrapperOptimizer
         }
     }
 
-    public function unwrap(): Optimizer
+    public function unwrap(): CommandOptimizer|ChainOptimizer|SmartOptimizer
     {
         return $this->optimizer instanceof WrapperOptimizer ? $this->optimizer->unwrap() : $this->optimizer;
     }

@@ -11,11 +11,14 @@ use ImageOptimizer\TypeGuesser\TypeGuesser;
 class SmartOptimizer implements Optimizer
 {
     /**
-     * @var Optimizer[]
+     * @var array<Optimizer> $optimizers
      */
-    private $optimizers;
-    private $typeGuesser;
+    private array $optimizers;
+    private TypeGuesser $typeGuesser;
 
+    /**
+     * @param array<Optimizer> $optimizers
+     */
     public function __construct(array $optimizers, TypeGuesser $typeGuesser = null)
     {
         $this->optimizers = $optimizers;

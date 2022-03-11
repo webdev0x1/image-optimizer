@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+* 3.0 (2022-03-11)
+
+  * Compatibility with svgo 2.8.0
+  * Updated all deps
+  * Moved from Travis to Github actions
+  * Support for PHP 8.1
+
 * 2.0.5 (2021-09-30)
 
   * [#77] Fixed the bug that the copied files were not deleted when the optimization failed
@@ -12,7 +19,7 @@ CHANGELOG
 * 2.0.2 (2020-01-11)
 
   * [#73] Support for Symfony 5
-    
+
 * 2.0.1 (2019-09-24)
 
   * [#70] Change log level from notice to error and change log message
@@ -50,7 +57,7 @@ CHANGELOG
 * 1.1.1 (2017-06-28)
 
   * [#30] Fix "Command not found" issue related to open_basedir
-  
+
 * 1.1.0 (2017-03-25)
 
   * [#8] Chain optimizers' better behaviour:
@@ -58,7 +65,7 @@ CHANGELOG
     * ignore error when first optimizer fails, but second one succeeds
     * report an error when all optimizers fail (an error is ignored when `ignore_errors` is enabled)
     * BC break - `ChainOptimizer` constructor now requires 2nd parameter, and adds 3rd parameter logger:
-```diff    
+```diff
 -    public function __construct(array $optimizers, $executeFirst = false)
 +    public function __construct(array $optimizers, $executeFirst, LoggerInterface $logger)
 ```

@@ -9,10 +9,10 @@ use Psr\Log\LoggerInterface;
 
 class SuppressErrorOptimizer implements WrapperOptimizer
 {
-    private $optimizer;
-    private $logger;
+    private ChangedOutputOptimizer $optimizer;
+    private LoggerInterface $logger;
 
-    public function __construct(Optimizer $optimizer, LoggerInterface $logger)
+    public function __construct(ChangedOutputOptimizer $optimizer, LoggerInterface $logger)
     {
         $this->optimizer = $optimizer;
         $this->logger = $logger;
@@ -30,8 +30,8 @@ class SuppressErrorOptimizer implements WrapperOptimizer
         }
     }
 
-    public function unwrap(): Optimizer
+    public function unwrap(): CommandOptimizer|ChainOptimizer|SmartOptimizer
     {
-        return $this->optimizer instanceof WrapperOptimizer ? $this->optimizer->unwrap() : $this->optimizer;
+        return $this->optimizer->unwrap();
     }
 }

@@ -6,5 +6,5 @@ namespace ImageOptimizer;
 
 interface WrapperOptimizer extends Optimizer
 {
-    public function unwrap(): Optimizer;
+    public function unwrap(): CommandOptimizer|ChainOptimizer|SmartOptimizer;
 }

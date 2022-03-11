@@ -6,10 +6,17 @@ namespace ImageOptimizer;
 
 class CommandOptimizer implements Optimizer
 {
-    public $command;
-    public $extraArgs;
+    public Command $command;
+    /**
+     * @var null|\Closure|array<string>
+     */
+    public null|\Closure|array $extraArgs;
 
-    public function __construct(Command $command, $extraArgs = null)
+    /**
+     * @param Command $command
+     * @param null|\Closure|array<string>|null $extraArgs
+     */
+    public function __construct(Command $command, null|\Closure|array $extraArgs = null)
     {
         $this->command = $command;
         $this->extraArgs = $extraArgs;

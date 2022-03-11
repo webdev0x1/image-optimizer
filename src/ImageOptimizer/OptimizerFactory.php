@@ -5,21 +5,68 @@ declare(strict_types=1);
 namespace ImageOptimizer;
 
 use ImageOptimizer\Exception\Exception;
+use ImageOptimizer\Optimizer;
 use ImageOptimizer\TypeGuesser\TypeGuesser;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Process\ExecutableFinder;
+use Symfony\Component\Process\Process;
 
 class OptimizerFactory
 {
     public const OPTIMIZER_SMART = 'smart';
 
-    private $optimizers = [];
-    private $options;
-    private $executableFinder;
-    private $logger;
+    /**
+     * @var array<ChangedOutputOptimizer|SuppressErrorOptimizer> $optimizers
+     */
+    private array $optimizers = [];
 
+    /**
+     * @var array{
+     *  ignore_errors: bool,
+     *  execute_only_first_png_optimizer: bool,
+     *  execute_only_first_jpeg_optimizer: bool,
+     *  optipng_options: array<string>,
+     *  pngquant_options: array<string>,
+     *  pngcrush_options: array<string>,
+     *  pngout_options: array<string>,
+     *  gifsicle_options: array<string>,
+     *  jpegoptim_options: array<string>,
+     *  jpegtran_options: array<string>,
+     *  advpng_options: array<string>,
+     *  svgo_options: array<string>,
+     *  custom_optimizers?: array<array{command: string, args: array<string>}>,
+     *  single_optimizer_timeout_in_seconds: int,
+     *  output_filepath_pattern: string
+     * }
+     */
+    private array $options;
+    private ExecutableFinder $executableFinder;
+    private LoggerInterface $logger;
+
+    /**
+     * Undocumented function
+     *
+     * @param array{
+     *  ignore_errors?: bool,
+     *  execute_only_first_png_optimizer?: bool,
+     *  execute_only_first_jpeg_optimizer?: bool,
+     *  optipng_options?: array<string>,
+     *  pngquant_options?: array<string>,
+     *  pngcrush_options?: array<string>,
+     *  pngout_options?: array<string>,
+     *  gifsicle_options?: array<string>,
+     *  jpegoptim_options?: array<string>,
+     *  jpegtran_options?: array<string>,
+     *  advpng_options?: array<string>,
+     *  svgo_options?: array<string>,
+     *  custom_optimizers?: array<array{command: string, args: array<string>}>,
+     *  single_optimizer_timeout_in_seconds?: int,
+     *  output_filepath_pattern?: string
+     * } $options
+     * @param LoggerInterface|null $logger
+     */
     public function __construct(array $options = [], LoggerInterface $logger = null)
     {
         $this->executableFinder = new ExecutableFinder();
@@ -29,6 +76,25 @@ class OptimizerFactory
         $this->setUpOptimizers();
     }
 
+    /**
+     * @param array{
+     *  ignore_errors?: bool,
+     *  execute_only_first_png_optimizer?: bool,
+     *  execute_only_first_jpeg_optimizer?: bool,
+     *  optipng_options?: array<string>,
+     *  pngquant_options?: array<string>,
+     *  pngcrush_options?: array<string>,
+     *  pngout_options?: array<string>,
+     *  gifsicle_options?: array<string>,
+     *  jpegoptim_options?: array<string>,
+     *  jpegtran_options?: array<string>,
+     *  advpng_options?: array<string>,
+     *  svgo_options?: array<string>,
+     *  custom_optimizers?: array<array{command: string, args: array<string>}>,
+     *  single_optimizer_timeout_in_seconds?: int,
+     *  output_filepath_pattern?: string
+     * } $options
+     */
     private function setOptions(array $options): void
     {
         $this->options = $this->getOptionsResolver()->resolve($options);
@@ -136,7 +202,7 @@ class OptimizerFactory
 
         foreach ($this->options['custom_optimizers'] as $key => $options) {
             $this->optimizers[$key] = $this->wrap(
-                $this->commandOptimizer($options['command'], isset($options['args']) ? $options['args'] : [])
+                $this->commandOptimizer($options['command'], $options['args'])
             );
         }
 
@@ -148,7 +214,13 @@ class OptimizerFactory
         ]));
     }
 
-    public function checkOptimizers()
+    /**
+     * Returns a list of optimizer executeable paths and whether or not
+     * they're installed.
+     *
+     * @return array<bool>
+     */
+    public function checkOptimizers(): array
     {
         $apps = [];
 
@@ -167,7 +239,7 @@ class OptimizerFactory
 
         // Loop through our apps calling 'which' on them to see if they're installed
         foreach (array_keys($apps) as $app) {
-            $process = new \Symfony\Component\Process\Process(['which', $app]);
+            $process = new Process(['which', $app]);
             $process->run();
 
             $apps[$app] = $process->isSuccessful();
@@ -176,7 +248,13 @@ class OptimizerFactory
         return $apps;
     }
 
-    private function commandOptimizer(string $command, array $args, $extraArgs = null): CommandOptimizer
+    /**
+     * @param string $command
+     * @param array<string> $args
+     * @param ?\Closure $extraArgs
+     * @return CommandOptimizer
+     */
+    private function commandOptimizer(string $command, array $args, ?\Closure $extraArgs = null): CommandOptimizer
     {
         return new CommandOptimizer(
             new Command($this->executable($command), $args, $this->options['single_optimizer_timeout_in_seconds']),
@@ -184,23 +262,28 @@ class OptimizerFactory
         );
     }
 
-    private function wrap(Optimizer $optimizer): Optimizer
+    private function wrap(CommandOptimizer|ChainOptimizer|SmartOptimizer $optimizer): ChangedOutputOptimizer|SuppressErrorOptimizer
     {
-        $optimizer = $optimizer instanceof ChangedOutputOptimizer ?
-            $optimizer :
-            new ChangedOutputOptimizer(
-                $this->option('output_filepath_pattern'),
-                $optimizer
-            );
+        // $optimizer = $optimizer instanceof ChangedOutputOptimizer ?
+        //     $optimizer :
+        //     new ChangedOutputOptimizer(
+        //         $this->option('output_filepath_pattern'),
+        //         $optimizer
+        //     );
+
+        $optimizer = new ChangedOutputOptimizer(
+            $this->option('output_filepath_pattern'),
+            $optimizer
+        );
 
         return $this->option('ignore_errors', true) ?
             new SuppressErrorOptimizer($optimizer, $this->logger) :
             $optimizer;
     }
 
-    private function unwrap(Optimizer $optimizer): Optimizer
+    private function unwrap(ChangedOutputOptimizer|SuppressErrorOptimizer $optimizer): CommandOptimizer|ChainOptimizer|SmartOptimizer
     {
-        return $optimizer instanceof WrapperOptimizer ? $optimizer->unwrap() : $optimizer;
+        return $optimizer->unwrap();
     }
 
     private function executable(string $name): string
@@ -211,7 +294,7 @@ class OptimizerFactory
         });
     }
 
-    private function option(string $name, $default = null)
+    private function option(string $name, mixed $default = null): mixed
     {
         return isset($this->options[$name]) ? $this->options[$name] : $this->resolveDefault($default);
     }
@@ -230,7 +313,7 @@ class OptimizerFactory
         return $this->optimizers[$name];
     }
 
-    private function resolveDefault($default)
+    private function resolveDefault(mixed $default): mixed
     {
         return is_callable($default) ? call_user_func($default) : $default;
     }
