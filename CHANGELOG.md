@@ -3,6 +3,7 @@ CHANGELOG
 
 * 3.0 (2022-03-11)
 
+  * Minimum PHP version compatibility raised to 8.0
   * Compatibility with svgo 2.8.0
   * Updated all deps
   * Moved from Travis to Github actions
