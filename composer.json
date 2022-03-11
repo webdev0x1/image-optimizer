@@ -30,6 +30,7 @@
     "scripts": {
         "phpcs":  "vendor/bin/phpcs  -s --standard=./.phpcs.xml ./",
         "phpcbf": "vendor/bin/phpcbf --standard=./.phpcs.xml ./",
+        "phpunit": "vendor/bin/phpunit",
         "test": [
             "composer validate --strict",
             "@phpcs"
