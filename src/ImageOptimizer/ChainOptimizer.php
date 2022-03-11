@@ -7,6 +7,9 @@ namespace ImageOptimizer;
 use ImageOptimizer\Exception\Exception;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Executes a list of optimizers in successssion.
+ */
 class ChainOptimizer implements Optimizer
 {
     /**

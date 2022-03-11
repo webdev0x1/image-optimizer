@@ -8,6 +8,9 @@ use ImageOptimizer\Exception\Exception;
 use ImageOptimizer\TypeGuesser\SmartTypeGuesser;
 use ImageOptimizer\TypeGuesser\TypeGuesser;
 
+/**
+ * Picks optimizer based on file type
+ */
 class SmartOptimizer implements Optimizer
 {
     /**

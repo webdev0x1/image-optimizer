@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace ImageOptimizer;
 
+/**
+ * Runs the Command upon optimization
+ */
 class CommandOptimizer implements Optimizer
 {
     public Command $command;

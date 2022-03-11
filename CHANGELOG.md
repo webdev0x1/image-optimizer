@@ -7,6 +7,8 @@ CHANGELOG
   * Updated all deps
   * Moved from Travis to Github actions
   * Support for PHP 8.1
+  * Abides by PSR-12 coding standards
+  * Passes PHPStan rule level 6
 
 * 2.0.5 (2021-09-30)
 

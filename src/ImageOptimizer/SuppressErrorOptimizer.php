@@ -7,6 +7,9 @@ namespace ImageOptimizer;
 use ImageOptimizer\Exception\Exception;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Logs optimization error output rather than throwing an exception
+ */
 class SuppressErrorOptimizer implements WrapperOptimizer
 {
     private ChangedOutputOptimizer $optimizer;

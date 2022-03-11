@@ -10,7 +10,7 @@ Thanks to ImageOptimizer and libraries that it uses, your image files can be **1
 
 Using composer:
 
-    composer require ps/image-optimizer
+    composer require flynsarmy/image-optimizer
 
 # Basic usage
 
@@ -135,9 +135,9 @@ In order to see all intermediate errors, you can use logger (be default
 `NullLogger` is used, so logs are not available):
 
 ```php
-class StdoutLogger extends \Psr\Log\AbstractLogger { 
-    public function log($level, $message, array $context = array()) { 
-        echo $message."\n"; 
+class StdoutLogger extends \Psr\Log\AbstractLogger {
+    public function log($level, $message, array $context = array()) {
+        echo $message."\n";
     }
 }
 

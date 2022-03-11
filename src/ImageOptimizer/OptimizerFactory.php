@@ -265,13 +265,6 @@ class OptimizerFactory
     private function wrap(
         CommandOptimizer|ChainOptimizer|SmartOptimizer $optimizer
     ): ChangedOutputOptimizer|SuppressErrorOptimizer {
-        // $optimizer = $optimizer instanceof ChangedOutputOptimizer ?
-        //     $optimizer :
-        //     new ChangedOutputOptimizer(
-        //         $this->option('output_filepath_pattern'),
-        //         $optimizer
-        //     );
-
         $optimizer = new ChangedOutputOptimizer(
             $this->option('output_filepath_pattern'),
             $optimizer

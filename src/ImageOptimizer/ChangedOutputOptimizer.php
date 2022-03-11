@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace ImageOptimizer;
 
+/**
+ * Handles copying of files if output filepath is diff to input before optimizing
+ */
 class ChangedOutputOptimizer implements WrapperOptimizer
 {
     private string $outputPattern;
