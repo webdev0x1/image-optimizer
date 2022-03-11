@@ -26,7 +26,7 @@ jobs:
           coverage: none
       - name: Install app dependencies
         run: |
-          apt-get update && apt-get install -y jpegoptim pngquant gifsicle optipng libjpeg-progs
+          sudo apt-get update && sudo apt-get install -y jpegoptim pngquant gifsicle optipng libjpeg-progs
           npm install -g svgo@2.8.0
       - name: Install PHP dependencies
         run: composer update ${{ matrix.composer_flags }} --no-interaction
