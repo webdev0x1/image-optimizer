@@ -3,3 +3,5 @@
 .gitignore export-ignore
 Vagrantfile export-ignore
 phpunit.xml export-ignore
+phpstan.neon export-ignore
+.phpcs.xml export-ignore
