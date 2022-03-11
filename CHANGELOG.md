@@ -9,6 +9,7 @@ CHANGELOG
   * Support for PHP 8.1
   * Abides by PSR-12 coding standards
   * Passes PHPStan rule level 6
+  * Introduced `$factory->checkOptimizers()` method to list installed optimizer apps
 
 * 2.0.5 (2021-09-30)
 

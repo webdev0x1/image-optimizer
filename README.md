@@ -1,4 +1,6 @@
-# Image Optimizer [![Build Status](https://app.travis-ci.com/psliwa/image-optimizer.svg?branch=master)](https://app.travis-ci.com/github/psliwa/image-optimizer)
+# Image Optimizer ![Build Status](https://github.com/flynsarmy/image-optimizer/actions/workflows/ci-php.yml/badge.svg)
+
+Fork of [ps/image-optimizer](https://github.com/psliwa/image-optimizer) with many improvements. See [Changelog](CHANGELOG.md) for details.
 
 This library is handy and very easy to use optimizer for image files. It uses [optipng][2], [pngquant][1], [jpegoptim][6], [svgo][9] and few more libraries,
 so before use it you should install proper libraries on your server. Project contains Vagrantfile that defines testing
@@ -123,6 +125,15 @@ And then usage:
 
 ```php
 $customOptimizer = $factory->get('some_optimizier');
+```
+
+# Checking which optimizers are installed on your system
+
+The following code will run a `which` on each executeable to determine if they are installed on your system and return a list of true/false results.
+
+```php
+$factory = new \ImageOptimizer\OptimizerFactory();
+print_r($factory->checkOptimizers());
 ```
 
 # I got "All optimizers failed to optimize the file"
